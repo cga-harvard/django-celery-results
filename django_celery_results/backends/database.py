@@ -26,12 +26,16 @@ class DatabaseBackend(BaseDictBackend):
         task_arguments = None
         if hasattr(request, 'args'):
             task_arguments = json.dumps(request.args)
+        task_name = None
+        if request:
+            if request.task:
+                task_name = str(request.task)
         self.TaskModel._default_manager.store_result(
             content_type, content_encoding,
             task_id, result, status,
             traceback=traceback,
             meta=meta,
-            task_name=str(request.task),
+            task_name=task_name,
             task_arguments=task_arguments
         )
         return result
